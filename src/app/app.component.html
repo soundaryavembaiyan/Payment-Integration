@@ -1,0 +1,70 @@
+<div *ngIf="!clickMe">
+  <h1>Shopping Cart</h1>
+
+  <table class="shopping-cart">
+    <!-- Table Headers -->
+    <thead>
+      <tr class="column-labels">
+        <th class="product-image">Image</th>
+        <th class="product-details">Product</th>
+        <th class="product-price">Price</th>
+        <th class="product-quantity">Quantity</th>
+        <th class="product-removal">Remove</th>
+        <th class="product-line-price">Total</th>
+      </tr>
+    </thead>
+
+    <!-- Table Body -->
+    <tbody>
+      <tr class="product" *ngFor="let product of products; let i = index">
+        <td class="product-image">
+          <img [src]="product.image" alt="Product image">
+        </td>
+        <td class="product-details">
+          <div class="product-title">{{ product.title }}</div>
+          <p class="product-description">{{ product.description }}</p>
+        </td>
+        <td class="product-price">{{ product.price | number:'1.2-2' }}</td>
+        <td class="product-quantity">
+          <input type="number" [value]="product.quantity" min="1" (change)="updateQuantity(product, $event)">
+        </td>
+        <td class="product-removal">
+          <button (click)="removeItem(i)">Remove</button>
+        </td>
+        <td class="product-line-price">{{ product.linePrice | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Totals Section -->
+  <div class="totals">
+    <div class="totals-item">
+      <label>Subtotal</label>
+      <div class="totals-value">{{ subtotal | number:'1.2-2' }}</div>
+    </div>
+    <div class="totals-item">
+      <label>Tax (5%)</label>
+      <div class="totals-value">{{ tax | number:'1.2-2' }}</div>
+    </div>
+    <div class="totals-item">
+      <label>Shipping</label>
+      <div class="totals-value">{{ shipping | number:'1.2-2' }}</div>
+    </div>
+    <div class="totals-item totals-item-total">
+      <label>Grand Total</label>
+      <div class="totals-value">{{ total | number:'1.2-2' }}</div>
+    </div>
+    <button class="checkout" (click)="goToPayment()" *ngIf="total > 0">Pay</button>
+  </div>
+</div>
+
+
+<div class="container" *ngIf="clickMe">
+  <h1 class="mar">Pay here!</h1>
+
+  <h2 class="mar">Total amount to pay: ${{total}}</h2>
+
+  <p class="mar">Please don't refresh the Browser while the transaction is processing...</p>
+  <div #paymentRef></div>
+  <button class="cancel" (click)="cancel()">Cancel</button>
+</div>
